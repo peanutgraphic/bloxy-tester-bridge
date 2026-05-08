@@ -1,0 +1,11 @@
+{
+  "input": {
+    "method": "POST",
+    "path": "/admin/tester/runs/42/events",
+    "body": "{\"event_type\":\"action\",\"text\":\"navigated to /\"}",
+    "timestamp": "2026-05-07T11:23:09Z",
+    "nonce": "01923456-7890-7abc-def0-123456789abc",
+    "token_b64": "eyJpc3MiOiJ0ZXN0ZXIiLCJhdWQiOiJodWIiLCJpYXQiOjE3NzgwMDAwMDAsImV4cCI6MTc3ODAwMDMwMCwicnVuX2lkIjo0MiwicGVyc29uYV9pZCI6MTd9"
+  },
+  "expected_canonical": "POST\n/admin/tester/runs/42/events\n370f56f535161980a4d0fcbcb6fa2872c2e91c72854ba92031bc6fefe1577fc2\n2026-05-07T11:23:09Z\n01923456-7890-7abc-def0-123456789abc\neyJpc3MiOiJ0ZXN0ZXIiLCJhdWQiOiJodWIiLCJpYXQiOjE3NzgwMDAwMDAsImV4cCI6MTc3ODAwMDMwMCwicnVuX2lkIjo0MiwicGVyc29uYV9pZCI6MTd9"
+}

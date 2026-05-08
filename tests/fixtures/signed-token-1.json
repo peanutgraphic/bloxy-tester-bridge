@@ -1,0 +1,16 @@
+{
+    "secret": "test-secret-do-not-use-in-prod-32-bytes-yo",
+    "claims": {
+        "iss": "tester",
+        "aud": "hub",
+        "iat": 1778000000,
+        "exp": 1778000300,
+        "run_id": 42,
+        "persona_id": 17,
+        "scope": [
+            "post_events"
+        ]
+    },
+    "expected_token_b64": "eyJpc3MiOiJ0ZXN0ZXIiLCJhdWQiOiJodWIiLCJpYXQiOjE3NzgwMDAwMDAsImV4cCI6MTc3ODAwMDMwMCwicnVuX2lkIjo0MiwicGVyc29uYV9pZCI6MTcsInNjb3BlIjpbInBvc3RfZXZlbnRzIl19",
+    "expected_token_sig_hex": "03a918cc31a3187af05dda59a38f40a15c67662af0fac9bd95ad7f4e34e1cdfd"
+}
