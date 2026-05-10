@@ -18,7 +18,7 @@ class HealthController
 
         return response()->json([
             'app_slug' => config('app.slug', config('app.name')),
-            'tester_bridge_version' => '0.2.0',
+            'tester_bridge_version' => '0.3.0',
             'tester_mode' => (bool) config('tester-bridge.mode'),
             'scenarios' => $scenarios,
             'capabilities' => [

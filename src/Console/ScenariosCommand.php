@@ -73,6 +73,12 @@ class ScenariosCommand extends Command
             ];
         }
 
+        // T-2 (Pass 3): sort by slug to match the JS sibling
+        // (scenariosDiscovery.ts), which sorts. Without this, the same
+        // input directory produced different /tester/health JSON between
+        // PHP and JS consumers — a cross-language parity bug.
+        usort($manifest, fn ($a, $b) => $a['slug'] <=> $b['slug']);
+
         return $manifest;
     }
 
