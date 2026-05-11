@@ -31,5 +31,9 @@ it('first signed health request 200, second with same nonce 401 replay', functio
 
     $second = $this->withHeaders($headers)->get('/tester/health');
     $second->assertStatus(401);
-    expect($second->getContent())->toBe('replay');
+    // S-27 (Pass 2 M4): response body is generic 'unauthorized'; the
+    // specific reason (replay / signature_mismatch / expired / etc.)
+    // logs server-side only so an attacker can't use the body as a
+    // staged-attack oracle.
+    expect($second->getContent())->toBe('unauthorized');
 });
