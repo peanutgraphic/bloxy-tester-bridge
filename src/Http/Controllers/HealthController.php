@@ -22,7 +22,7 @@ class HealthController
             'tester_mode' => (bool) config('tester-bridge.mode'),
             'scenarios' => $scenarios,
             'capabilities' => [
-                'clock_advance' => false,
+                'clock_advance' => true,
                 'coupon_seed' => false,
                 'seed_pro_membership' => false,
                 'replay_defense' => true,                      // Phase 2 ✓
