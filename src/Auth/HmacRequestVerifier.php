@@ -39,6 +39,17 @@ class HmacRequestVerifier implements RequestVerifier
             return new VerifyResult(false, 'expired');
         }
 
+        // B-3 (M4): bound the X-Tester-Timestamp header itself against the
+        // wall clock BEFORE doing the HMAC compare. Without this gate, an
+        // attacker who captured a valid request could replay it indefinitely
+        // for the lifetime of the token (its $claims['exp']). The HMAC compare
+        // happens after this check so the constant-time path only runs on
+        // requests that are otherwise plausibly fresh.
+        $requestTs = strtotime($ts);
+        if ($requestTs === false || abs($now - $requestTs) > $this->clockSkewSeconds) {
+            return new VerifyResult(false, 'timestamp_skew');
+        }
+
         $canonical = CanonicalRequest::build($method, $path, $body, $ts, $nonce, $token);
         $expected = hash_hmac('sha256', $canonical, $this->sharedSecret);
 

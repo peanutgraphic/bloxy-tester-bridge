@@ -61,3 +61,29 @@ it('rejects malformed token', function () {
     $h = ['X-Tester-Token' => 'not-base64!!!', 'X-Tester-Signature' => 'x', 'X-Tester-Timestamp' => 'y', 'X-Tester-Nonce' => 'z'];
     expect($v->verify('POST', '/x', '', $h)->reason)->toBe('malformed_token');
 });
+
+it('rejects requests whose X-Tester-Timestamp skews beyond clockSkewSeconds (B-3)', function () {
+    $secret = 'sek';
+    $now = time();
+
+    // Forge a request where the token is still valid (exp far in the future)
+    // but the request timestamp itself is 5 minutes stale — i.e. a replay
+    // of a captured-but-still-valid token. Pre-B-3 this would pass through
+    // to the HMAC compare; post-B-3 it short-circuits with timestamp_skew.
+    $claims = ['iss' => 'tester', 'iat' => $now - 7200, 'exp' => $now + 7200];
+    $stale = $now - 300;
+    $tokenJson = json_encode($claims, JSON_UNESCAPED_SLASHES);
+    $tokenB64 = rtrim(strtr(base64_encode($tokenJson), '+/', '-_'), '=');
+    $ts = gmdate('Y-m-d\TH:i:s\Z', $stale);
+    $nonce = '01923456-7890-7abc-def0-123456789abc';
+    $canonical = "POST\n/x\n" . hash('sha256', '') . "\n{$ts}\n{$nonce}\n{$tokenB64}";
+    $h = [
+        'X-Tester-Token' => $tokenB64,
+        'X-Tester-Signature' => hash_hmac('sha256', $canonical, $secret),
+        'X-Tester-Timestamp' => $ts,
+        'X-Tester-Nonce' => $nonce,
+    ];
+
+    $v = new HmacRequestVerifier($secret, clockSkewSeconds: 60);
+    expect($v->verify('POST', '/x', '', $h)->reason)->toBe('timestamp_skew');
+});
